@@ -5,10 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Translation", menuName = "Language/Translation", order = 1)]
 public class Translation : ScriptableObject
 {
-    [SerializeField] string language;
+    [SerializeField] string selectedLanguage;
     public string Language
     {
-        get { return language; }
+        get { return selectedLanguage; }
     }
 
     Dictionary<string, string> dictionary;
@@ -22,7 +22,7 @@ public class Translation : ScriptableObject
 
         if (dictionary == null)
         {
-            Build();
+            dictionary = Translation.BuildDictionary(selectedLanguage);
         }
 
         string[] words = line.Split(' ');
@@ -39,10 +39,9 @@ public class Translation : ScriptableObject
         return string.Join(" ", translations);
     }
 
-    void Build()
+    public static Dictionary<string, string> BuildDictionary(string language)
     {
-        dictionary = new Dictionary<string, string>();
-
+        Dictionary<string, string> dictionary = new Dictionary<string, string>();
         using (StreamReader reader = new StreamReader(@"Assets/TranslationSupport/" + language + ".csv"))
         {
             while (!reader.EndOfStream)
@@ -56,5 +55,6 @@ public class Translation : ScriptableObject
                 }
             }
         }
+        return dictionary;
     }
 }
